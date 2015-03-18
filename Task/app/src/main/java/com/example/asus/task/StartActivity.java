@@ -17,7 +17,31 @@ public class StartActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        final Activity activity = this;
+        if (savedInstanceState == null) {
+                thread = new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
 
+                        runOnUiThread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(activity, MainActivity.class);
+                                        startActivity(intent);
+                                        activity.finish();
+                                        ;
+                                    }
+                                });
+                    }
+                });
+                thread.start();
+            //}
+        }
     }
 
      @Override
@@ -25,38 +49,13 @@ public class StartActivity extends Activity {
 
          super.onStart();
 
-         final Activity activity = this;
-        thread = (Thread)getLastNonConfigurationInstance();
-         if(thread == null) {
-             thread = new Thread(new Runnable() {
-                 public void run() {
-                     try {
-                         Thread.sleep(2000);
-                     } catch (InterruptedException e) {
-                         e.printStackTrace();
-                     }
 
-                     runOnUiThread(
-                             new Runnable() {
-                                 @Override
-                                 public void run() {
-                                     Intent intent = new Intent(activity, MainActivity.class);
-                                     startActivity(intent);
-                                     activity.finish();
-                                     ;
-                                 }
-                             });
-                 }
-             });
-             thread.start();
-         }
     }
 
     @Override
-    public Object onRetainNonConfigurationInstance() {
-        return thread;
-    }
+    public void onSaveInstanceState(Bundle savedInstanceState){
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
